@@ -1,2 +1,2 @@
-# mis
-create-react-app with typescript and .NET 5
+# mis-ts-app
+create-react-app with typescript and apollo graphql client
