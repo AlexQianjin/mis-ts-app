@@ -1,6 +1,17 @@
 # mis-ts-app
 create-react-app with typescript and apollo graphql client
 
+# Setup
+## ESlint
+- npm install eslint --save-dev
+- npx eslint --init
+- echo ''> .eslintignore
+
+## Prettier
+- npm install --save-dev --save-exact prettier
+- echo {}> .prettierrc.json
+- echo ''> .prettierignore
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

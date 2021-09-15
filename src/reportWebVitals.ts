@@ -1,7 +1,10 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable promise/catch-or-return */
 import { ReportHandler } from 'web-vitals';
 
 const reportWebVitals = (onPerfEntry?: ReportHandler) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
+    // eslint-disable-next-line promise/always-return
     import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
       getCLS(onPerfEntry);
       getFID(onPerfEntry);

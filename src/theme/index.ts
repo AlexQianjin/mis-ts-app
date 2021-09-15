@@ -5,9 +5,9 @@ import typography from './typography';
 import overrides from './overrides';
 
 const theme = createTheme({
-    palette,
-    overrides,
-    typography
+  palette,
+  overrides,
+  typography
 });
 
 export default theme;

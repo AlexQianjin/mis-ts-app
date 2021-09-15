@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import reportWebVitals from './reportWebVitals';
+import App from './App';
 import theme from './theme';
 
 const queryClient = new QueryClient();
@@ -15,7 +15,7 @@ ReactDOM.render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <App />
-        <CssBaseline/>
+        <CssBaseline />
       </ThemeProvider>
     </QueryClientProvider>
   </React.StrictMode>,
