@@ -44,10 +44,6 @@ const IntervalQuery = () => {
   const loadingProps = { label: data?.uuid || 'Loading...', progress: 5 };
 
   return <LinearProgressWithLabel {...loadingProps} />;
-
-  // return (
-  //     <div>{data?.uuid}</div>
-  // );
 };
 
 export default IntervalQuery;

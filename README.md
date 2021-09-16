@@ -12,6 +12,32 @@ create-react-app with typescript and apollo graphql client
 - echo {}> .prettierrc.json
 - echo ''> .prettierignore
 
+## Husky 
+### Automatic
+- npx husky-init && npm install
+
+### Manual
+- npm install husky --save-dev
+- npx husky install
+- npm set-script prepare "husky install"
+``` json
+{
+  "scripts": {
+    "prepare": "husky install"
+  }
+}
+```
+
+## lint staged
+- npm install --save-dev lint-staged
+``` json
+{
+  "lint-staged": {
+    "*": "your-cmd"
+  }
+}
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
