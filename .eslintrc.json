@@ -28,8 +28,7 @@
         "eslint-comments",
         "jest",
         "promise",
-        "import",
-        "prettier"
+        "import"
     ],
     "settings": {
         "import/resolver": {
@@ -44,7 +43,7 @@
         }
     },
     "rules": {
-        "prettier/prettier": "error",
+        // "prettier/prettier": "error",
         "import/prefer-default-export": "off",
         "import/extensions": "off",
         "no-console": "off",
