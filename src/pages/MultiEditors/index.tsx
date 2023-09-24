@@ -28,7 +28,6 @@ export default function MultiEditors() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
       <h3>Editors</h3>
       <div>
         {cats.length > 0
