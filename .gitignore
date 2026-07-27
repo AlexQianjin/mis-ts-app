@@ -3,6 +3,20 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Node / pnpm
+node_modules/
+.pnpm-store/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Environment and local tooling
+.env
+.env.*
+!.env.example
+.DS_Store
+.vite/
+
 # User-specific files
 *.rsuser
 *.suo

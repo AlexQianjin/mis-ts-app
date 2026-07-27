@@ -1,0 +1,26 @@
+{
+  "name": "mis-ts-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --recursive --if-present --sort build",
+    "build:packages": "pnpm --filter './packages/**' --if-present --sort build",
+    "dev": "pnpm build:packages && pnpm --parallel --filter @repo/web --filter @repo/api dev",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "lint": "eslint . && pnpm --filter @repo/web lint",
+    "test": "pnpm --recursive --if-present test",
+    "typecheck": "pnpm build:packages && pnpm --recursive --if-present --sort typecheck"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "eslint": "^9.32.0",
+    "oxfmt": "^0.60.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.17.0"
+}
