@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+/* Application-wide base styles and page themes. */
+
 :root {
   color: #16213c;
   background: #f4f7fb;

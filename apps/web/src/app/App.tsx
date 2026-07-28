@@ -1,10 +1,8 @@
-import { ApiClient } from '@repo/api-client';
 import { Button } from '@repo/ui';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
-const apiBaseUrl = import.meta.env.VITE_API_URL?.trim() || '/api';
-const api = new ApiClient(apiBaseUrl);
+import { api } from '../lib/http';
 
 export function App() {
   const {

@@ -1,6 +1,6 @@
+import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link } from '@tanstack/react-router';
 
 export function LoginPage() {
   const [message, setMessage] = useState('');

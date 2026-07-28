@@ -1,7 +1,7 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
 
+import { LoginPage } from '../features/auth';
 import { App } from './App';
-import { LoginPage } from './LoginPage';
 
 const rootRoute = createRootRoute({
   component: Outlet
