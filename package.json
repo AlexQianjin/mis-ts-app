@@ -8,7 +8,7 @@
     "dev": "pnpm build:packages && pnpm --parallel --filter @repo/web --filter @repo/api dev",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "lint": "eslint . && pnpm --filter @repo/web lint",
+    "lint": "pnpm --recursive --if-present lint",
     "test": "pnpm --recursive --if-present test",
     "typecheck": "pnpm build:packages && pnpm --recursive --if-present --sort typecheck"
   },
