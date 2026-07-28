@@ -1,6 +1,7 @@
 import { ApiClient } from '@repo/api-client';
 import { Button } from '@repo/ui';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 
 const apiBaseUrl = import.meta.env.VITE_API_URL?.trim() || '/api';
 const api = new ApiClient(apiBaseUrl);
@@ -35,9 +36,14 @@ export function App() {
           <span className={health && !error ? 'dot dot--online' : 'dot'} />
           {statusMessage}
         </div>
-        <Button disabled={isFetching} onClick={() => void refetch()}>
-          {isFetching ? 'Checking API…' : 'Check API'}
-        </Button>
+        <div className="home-actions">
+          <Link className="primary-link" to="/login">
+            Open login
+          </Link>
+          <Button disabled={isFetching} onClick={() => void refetch()}>
+            {isFetching ? 'Checking API…' : 'Check API'}
+          </Button>
+        </div>
       </section>
     </main>
   );

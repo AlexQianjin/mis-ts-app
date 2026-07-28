@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 RUN corepack enable
 WORKDIR /app
 
@@ -15,7 +15,7 @@ COPY packages/tsconfig packages/tsconfig
 RUN pnpm --filter @repo/shared-types build && pnpm --filter @repo/api build
 RUN pnpm deploy --legacy --filter @repo/api --prod /prod/api
 
-FROM node:22-alpine AS runner
+FROM node:24-alpine AS runner
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=builder /prod/api ./
