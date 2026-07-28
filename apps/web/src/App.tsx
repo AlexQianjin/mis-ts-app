@@ -1,34 +1,26 @@
-import { useEffect, useState } from 'react';
-
 import { ApiClient } from '@repo/api-client';
-import type { HealthResponse } from '@repo/shared-types';
 import { Button } from '@repo/ui';
+import { useQuery } from '@tanstack/react-query';
 
 const apiBaseUrl = import.meta.env.VITE_API_URL?.trim() || '/api';
 const api = new ApiClient(apiBaseUrl);
 
 export function App() {
-  const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    data: health,
+    error,
+    isFetching,
+    refetch
+  } = useQuery({
+    queryKey: ['health'],
+    queryFn: () => api.health()
+  });
 
-  const checkApi = async () => {
-    setError(null);
-
-    try {
-      setHealth(await api.health());
-    } catch (requestError) {
-      setHealth(null);
-      setError(
-        requestError instanceof Error
-          ? requestError.message
-          : 'The API is not available. Start it with pnpm dev.'
-      );
-    }
-  };
-
-  useEffect(() => {
-    void checkApi();
-  }, []);
+  const statusMessage = error
+    ? error.message || 'The API is not available. Start it with pnpm dev.'
+    : health
+      ? `API status: ${health.status}`
+      : 'Checking API…';
 
   return (
     <main className="page">
@@ -40,10 +32,12 @@ export function App() {
           packages.
         </p>
         <div className="status" aria-live="polite">
-          <span className={health ? 'dot dot--online' : 'dot'} />
-          {health ? `API status: ${health.status}` : (error ?? 'Checking API…')}
+          <span className={health && !error ? 'dot dot--online' : 'dot'} />
+          {statusMessage}
         </div>
-        <Button onClick={() => void checkApi()}>Check API</Button>
+        <Button disabled={isFetching} onClick={() => void refetch()}>
+          {isFetching ? 'Checking API…' : 'Check API'}
+        </Button>
       </section>
     </main>
   );
