@@ -1,16 +1,57 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, type LoginInput } from '@repo/shared-types';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import type { FormEvent } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { authClient } from '../../../lib/auth';
 
 const fieldClassName =
   'grid gap-[9px] text-[0.9rem] font-bold text-[#263452] [&_input]:min-h-[52px] [&_input]:w-full [&_input]:rounded-[11px] [&_input]:border [&_input]:border-[#ccd6e5] [&_input]:bg-[#fbfcfe] [&_input]:px-4 [&_input]:text-[#16213c] [&_input]:outline-none [&_input]:transition-[border-color,box-shadow,background] [&_input]:duration-150 [&_input]::placeholder:text-[#97a3b7] [&_input:focus]:border-[#526cd3] [&_input:focus]:bg-white [&_input:focus]:shadow-[0_0_0_4px_rgb(82_108_211_/_12%)]';
 
 export function LoginPage() {
-  const [message, setMessage] = useState('');
+  const [notice, setNotice] = useState('');
+  const queryClient = useQueryClient();
+  const {
+    clearErrors,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    register,
+    setError
+  } = useForm<LoginInput>({
+    defaultValues: {
+      email: '',
+      password: '',
+      rememberMe: false
+    },
+    resolver: zodResolver(loginSchema)
+  });
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setMessage('The login screen is ready. Connect an authentication endpoint to sign in.');
+  const onSubmit = async (values: LoginInput) => {
+    setNotice('');
+    clearErrors('root');
+
+    try {
+      const result = await authClient.signIn.email(values);
+
+      if (result.error) {
+        setError('root', {
+          message:
+            result.error.status === 401
+              ? 'The email or password is incorrect.'
+              : result.error.message || 'Unable to sign in. Please try again.'
+        });
+        return;
+      }
+
+      await queryClient.invalidateQueries();
+      window.location.assign('/');
+    } catch {
+      setError('root', {
+        message: 'Unable to reach the authentication service. Please try again.'
+      });
+    }
   };
 
   return (
@@ -72,39 +113,54 @@ export function LoginPage() {
               </p>
             </header>
 
-            <form className="grid gap-[22px]" onSubmit={handleSubmit}>
+            <form className="grid gap-[22px]" noValidate onSubmit={handleSubmit(onSubmit)}>
               <label className={fieldClassName}>
                 <span>Email address</span>
                 <input
+                  {...register('email')}
+                  aria-describedby={errors.email ? 'email-error' : undefined}
+                  aria-invalid={Boolean(errors.email)}
                   autoComplete="email"
-                  name="email"
                   placeholder="name@company.com"
-                  required
                   type="email"
                 />
+                {errors.email ? (
+                  <span className="text-[0.8rem] font-semibold text-[#b42318]" id="email-error">
+                    {errors.email.message}
+                  </span>
+                ) : null}
               </label>
 
               <label className={fieldClassName}>
                 <span>Password</span>
                 <input
+                  {...register('password')}
+                  aria-describedby={errors.password ? 'password-error' : undefined}
+                  aria-invalid={Boolean(errors.password)}
                   autoComplete="current-password"
-                  minLength={8}
-                  name="password"
                   placeholder="Enter your password"
-                  required
                   type="password"
                 />
+                {errors.password ? (
+                  <span className="text-[0.8rem] font-semibold text-[#b42318]" id="password-error">
+                    {errors.password.message}
+                  </span>
+                ) : null}
               </label>
 
               <div className="-mt-1 flex items-center justify-between gap-4 text-[0.88rem] max-[420px]:flex-col max-[420px]:items-start">
                 <label className="inline-flex items-center gap-[9px] text-[#53617c]">
-                  <input className="size-4 accent-[#526cd3]" name="remember" type="checkbox" />
+                  <input
+                    {...register('rememberMe')}
+                    className="size-4 accent-[#526cd3]"
+                    type="checkbox"
+                  />
                   <span>Remember me</span>
                 </label>
                 <button
                   className="cursor-pointer p-0 font-bold text-[#4059bd]"
                   type="button"
-                  onClick={() => setMessage('Password recovery is not connected yet.')}
+                  onClick={() => setNotice('Contact your administrator to reset your password.')}
                 >
                   Forgot password?
                 </button>
@@ -112,17 +168,22 @@ export function LoginPage() {
 
               <button
                 className="min-h-[54px] cursor-pointer rounded-[11px] bg-[#526cd3] font-extrabold text-white shadow-[0_12px_28px_rgb(82_108_211_/_24%)] transition-[background,transform] duration-150 hover:-translate-y-px hover:bg-[#4059bd]"
+                disabled={isSubmitting}
                 type="submit"
               >
-                Sign in
+                {isSubmitting ? 'Signing in…' : 'Sign in'}
               </button>
 
-              {message ? (
+              {errors.root?.message || notice ? (
                 <p
-                  className="-mt-1 rounded-[10px] border border-[#d7dff8] bg-[#f3f6ff] px-3.5 py-3 text-[0.85rem] leading-normal text-[#40517f]"
-                  role="status"
+                  className={`-mt-1 rounded-[10px] border px-3.5 py-3 text-[0.85rem] leading-normal ${
+                    errors.root?.message
+                      ? 'border-[#f2c7c2] bg-[#fff4f2] text-[#8f2117]'
+                      : 'border-[#d7dff8] bg-[#f3f6ff] text-[#40517f]'
+                  }`}
+                  role={errors.root?.message ? 'alert' : 'status'}
                 >
-                  {message}
+                  {errors.root?.message || notice}
                 </p>
               ) : null}
             </form>
@@ -132,9 +193,7 @@ export function LoginPage() {
               <button
                 className="cursor-pointer p-0 font-bold text-[#4059bd]"
                 type="button"
-                onClick={() =>
-                  setMessage('Contact your workspace administrator to request access.')
-                }
+                onClick={() => setNotice('Contact your workspace administrator to request access.')}
               >
                 Contact your administrator
               </button>

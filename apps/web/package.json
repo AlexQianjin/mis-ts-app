@@ -11,15 +11,19 @@
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.7.1",
     "@repo/api-client": "workspace:*",
     "@repo/shared-types": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-router": "^1.170.18",
+    "better-auth": "^1.6.26",
     "clsx": "^2.1.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "tailwind-merge": "^3.6.0"
+    "react-hook-form": "^7.84.0",
+    "tailwind-merge": "^3.6.0",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-import type { ApiError, HealthResponse } from '@repo/shared-types';
+import type { ApiError, CurrentUserResponse, HealthResponse } from '@repo/shared-types';
 
 export class ApiClientError extends Error {
   constructor(
@@ -22,6 +22,7 @@ export class ApiClient {
       client ??
       axios.create({
         baseURL: baseUrl,
+        withCredentials: true,
         headers: {
           'Content-Type': 'application/json'
         }
@@ -32,6 +33,13 @@ export class ApiClient {
     return this.request<HealthResponse>({
       method: 'GET',
       url: '/health'
+    });
+  }
+
+  me(): Promise<CurrentUserResponse> {
+    return this.request<CurrentUserResponse>({
+      method: 'GET',
+      url: '/me'
     });
   }
 

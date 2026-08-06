@@ -2,12 +2,13 @@
   "name": "@repo/api",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nest build",
     "dev": "nest start --watch",
     "start": "node dist/main.js",
     "start:prod": "node dist/main.js",
-    "test": "jest --runInBand",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
     "typecheck": "tsc --noEmit --pretty false"
   },
   "dependencies": {
@@ -15,6 +16,9 @@
     "@nestjs/core": "^11.1.5",
     "@nestjs/platform-express": "^11.1.5",
     "@repo/shared-types": "workspace:*",
+    "@thallesp/nestjs-better-auth": "^2.7.0",
+    "better-auth": "^1.6.26",
+    "pg": "^8.22.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },
@@ -23,6 +27,7 @@
     "@nestjs/testing": "^11.1.5",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.1.0",
+    "@types/pg": "^8.20.4",
     "jest": "^30.0.5",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",

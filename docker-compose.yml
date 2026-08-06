@@ -1,10 +1,33 @@
 services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-mis}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mis}
+      POSTGRES_USER: ${POSTGRES_USER:-mis}
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
   api:
     build:
       context: .
       dockerfile: docker/api.Dockerfile
     environment:
       API_PORT: 3000
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-local-docker-secret-change-before-production}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:8080}
+      DATABASE_URL: ${API_DATABASE_URL:-postgresql://mis:mis@postgres:5432/mis}
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:8080}
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - '3000:3000'
 
@@ -16,3 +39,6 @@ services:
       - api
     ports:
       - '8080:80'
+
+volumes:
+  postgres-data:

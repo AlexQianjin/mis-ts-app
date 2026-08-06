@@ -3,9 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
 import { api } from '../lib/http';
+import { authClient } from '../lib/auth';
 import { cn } from '../utils/cn';
 
 export function App() {
+  const { data: session, isPending: isSessionPending } = authClient.useSession();
   const {
     data: health,
     error,
@@ -14,6 +16,11 @@ export function App() {
   } = useQuery({
     queryKey: ['health'],
     queryFn: () => api.health()
+  });
+  const { data: currentUser } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => api.me(),
+    enabled: Boolean(session)
   });
 
   const statusMessage = error
@@ -32,8 +39,9 @@ export function App() {
           React and NestJS are connected.
         </h1>
         <p className="my-6 text-[1.05rem] leading-[1.7] text-[#63708b]">
-          Shared types, a typed API client, and UI components are all provided by workspace
-          packages.
+          {currentUser
+            ? `Signed in as ${currentUser.user.name || currentUser.user.email}. Your session is valid in both the web and API apps.`
+            : 'Shared types, a typed API client, and UI components are all provided by workspace packages.'}
         </p>
         <div className="mb-6 flex items-center gap-2.5 text-[#43506b]" aria-live="polite">
           <span
@@ -42,12 +50,22 @@ export function App() {
           {statusMessage}
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Link
-            className="rounded-[10px] bg-[#16213c] px-[18px] py-3 font-bold text-white no-underline"
-            to="/login"
-          >
-            Open login
-          </Link>
+          {isSessionPending ? null : session ? (
+            <button
+              className="cursor-pointer rounded-[10px] bg-[#16213c] px-[18px] py-3 font-bold text-white"
+              type="button"
+              onClick={() => void authClient.signOut().then(() => window.location.reload())}
+            >
+              Sign out
+            </button>
+          ) : (
+            <Link
+              className="rounded-[10px] bg-[#16213c] px-[18px] py-3 font-bold text-white no-underline"
+              to="/login"
+            >
+              Open login
+            </Link>
+          )}
           <Button disabled={isFetching} onClick={() => void refetch()}>
             {isFetching ? 'Checking API…' : 'Check API'}
           </Button>
