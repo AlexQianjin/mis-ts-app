@@ -1,10 +1,11 @@
-import { Button } from '@repo/ui';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
 import { api } from '../lib/http';
 import { authClient } from '../lib/auth';
-import { cn } from '../utils/cn';
 
 export function App() {
   const { data: session, isPending: isSessionPending } = authClient.useSession();
@@ -66,7 +67,11 @@ export function App() {
               Open login
             </Link>
           )}
-          <Button disabled={isFetching} onClick={() => void refetch()}>
+          <Button
+            className="h-auto bg-[#526cd3] px-[18px] py-3 font-bold hover:bg-[#4059bd]"
+            disabled={isFetching}
+            onClick={() => void refetch()}
+          >
             {isFetching ? 'Checking API…' : 'Check API'}
           </Button>
         </div>
