@@ -10,7 +10,7 @@
     color: #16213c;
     background: #f4f7fb;
     font-family:
-      Inter,
+      'Geist Variable',
       ui-sans-serif,
       system-ui,
       -apple-system,
@@ -36,6 +36,15 @@
   html {
     @apply font-sans;
   }
+}
+
+.dark-dashboard > div {
+  filter: invert(0.9) hue-rotate(180deg);
+}
+
+.dark-dashboard svg,
+.dark-dashboard [class*='bg-[#d9defc]'] {
+  filter: invert(1) hue-rotate(180deg);
 }
 
 @theme inline {

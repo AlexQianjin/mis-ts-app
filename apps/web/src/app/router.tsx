@@ -1,6 +1,7 @@
-import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
+import { createRootRoute, createRoute, createRouter, Outlet, redirect } from '@tanstack/react-router';
 
 import { LoginPage } from '../features/auth';
+import { authClient } from '../lib/auth';
 import { App } from './App';
 
 const rootRoute = createRootRoute({
@@ -10,6 +11,13 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
+  beforeLoad: async () => {
+    const { data: session } = await authClient.getSession();
+
+    if (!session) {
+      throw redirect({ to: '/login' });
+    }
+  },
   component: App
 });
 
