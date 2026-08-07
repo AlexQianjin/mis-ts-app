@@ -6,7 +6,6 @@ import {
   Bell,
   Box,
   ChevronDown,
-  ChevronLeft,
   ChevronRight,
   CircleHelp,
   Command,
